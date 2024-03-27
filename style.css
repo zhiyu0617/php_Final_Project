@@ -1,0 +1,91 @@
+/* Overall body styling */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+}
+
+/* Container for the form, to align and style it */
+.container {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+/* Styling the form itself */
+form {
+  margin: 0;
+}
+
+/* Styling for each table row */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: left;
+}
+
+/* Labels */
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Input fields styling */
+input[type="text"],
+input[type="password"] {
+  width: calc(100% - 22px);
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Button styling */
+input[type="submit"] {
+  cursor: pointer;
+  width: auto;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+input[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+/* Highlight the first button (Register) to indicate primary action */
+#submit1 {
+  background-color: #28a745;
+}
+
+#submit1:hover {
+  background-color: #218838;
+}
+
+/* Login button styling */
+button {
+  cursor: pointer;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
