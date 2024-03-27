@@ -4,8 +4,9 @@ session_start();
 // Database connection parameters
 define('HOSTNAME', 'localhost');
 define('USERNAME', 'root');
-define('PASSWORD', '');
-define('DATABASE', '3-database-entity.sql');
+define('PASSWORD', ''); 
+define('DATABASE', 'kidsGames'); 
+
 
 // Attempt database connection
 $connection = new mysqli(HOSTNAME, USERNAME, PASSWORD, DATABASE);
