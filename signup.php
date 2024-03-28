@@ -7,7 +7,6 @@ define('USERNAME', 'root');
 define('PASSWORD', ''); 
 define('DATABASE', 'kidsGames'); 
 
-
 // Attempt database connection
 $connection = new mysqli(HOSTNAME, USERNAME, PASSWORD, DATABASE);
 if ($connection->connect_error) {
@@ -17,24 +16,26 @@ if ($connection->connect_error) {
 $error_messages = [];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action'])) {
-    $username = filter_var(trim($_POST['username']), FILTER_SANITIZE_STRING);
+    $username = trim($_POST['username']);
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
-    $fname = filter_var(trim($_POST['fname']), FILTER_SANITIZE_STRING);
-    $lname = filter_var(trim($_POST['lname']), FILTER_SANITIZE_STRING);
+    $fname = trim($_POST['fname']);
+    $lname = trim($_POST['lname']);
 
     // Validate input fields
     if (empty($username) || empty($password) || empty($confirm_password) || empty($fname) || empty($lname)) {
         $error_messages[] = "All fields are required.";
-    } elseif (!preg_match("/^[a-zA-Z]/", $username) || !preg_match("/^[a-zA-Z]/", $fname) || !preg_match("/^[a-zA-Z]/", $lname)) {
-        $error_messages[] = "First Name, Last Name, and Username must begin with a letter.";
+    } elseif (!ctype_alpha(str_replace(' ', '', $fname)) || !ctype_alpha(str_replace(' ', '', $lname))) {
+        $error_messages[] = "First Name and Last Name must contain only letters.";
+    } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
+        $error_messages[] = "Username must contain only alphanumeric characters and underscores.";
     } elseif (strlen($username) < 8 || strlen($password) < 8) {
         $error_messages[] = "Username and Password must contain at least 8 characters.";
     } elseif ($password !== $confirm_password) {
         $error_messages[] = "Passwords do not match.";
     } else {
         // Check for unique username
-        $stmt = $connection->prepare("SELECT id FROM users WHERE username = ?");
+        $stmt = $connection->prepare("SELECT userName FROM player WHERE userName = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $stmt->store_result();
@@ -47,16 +48,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action'])) {
     // Insert user into database if no errors
     if (empty($error_messages)) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $insertStmt = $connection->prepare("INSERT INTO users (username, password, fname, lname) VALUES (?, ?, ?, ?)");
-        $insertStmt->bind_param("ssss", $username, $hashedPassword, $fname, $lname);
-        if ($insertStmt->execute()) {
+        // Start transaction
+        $connection->begin_transaction();
+        try {
+            // Insert into player table
+            $insertPlayerStmt = $connection->prepare("INSERT INTO player (fName, lName, userName, registrationTime) VALUES (?, ?, ?, NOW())");
+            $insertPlayerStmt->bind_param("sss", $fname, $lname, $username);
+            $insertPlayerStmt->execute();
+            $insertPlayerStmt->close();
+
+            // Get the last inserted registrationOrder
+            $registrationOrder = $connection->insert_id;
+
+            // Insert into authenticator table
+            $insertAuthenticatorStmt = $connection->prepare("INSERT INTO authenticator (passCode, registrationOrder) VALUES (?, ?)");
+            $insertAuthenticatorStmt->bind_param("si", $hashedPassword, $registrationOrder);
+            $insertAuthenticatorStmt->execute();
+            $insertAuthenticatorStmt->close();
+
+            // Commit transaction
+            $connection->commit();
+
             $_SESSION['success_message'] = "Account created successfully. Please log in.";
-            header("Location: signin-form.php"); // Redirect to home or login page 
+            header("Location: signin-form.php");
             exit;
-        } else {
+        } catch (Exception $e) {
+            // Rollback transaction if something goes wrong
+            $connection->rollback();
             $error_messages[] = "An error occurred. Please try again.";
         }
-        $insertStmt->close();
     }
 
     // If errors exist, keep form data and errors in session
