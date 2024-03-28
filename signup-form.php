@@ -118,7 +118,7 @@ $lname = isset($_POST['lname']) ? trim($_POST['lname']) : '';
                 </tr>
                 <tr>
                     <td></td>
-                    <td><button type="button" onclick="window.location.href='signup.php';">Login</button></td>
+                    <td><button type="button" onclick="window.location.href='index.php';">Login</button></td>
                 </tr>
             </table>
         </form>
