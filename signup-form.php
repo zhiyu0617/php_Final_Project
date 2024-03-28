@@ -9,16 +9,16 @@ $error_messages = [];
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action'])) {
     
     // Get form data
-$username = isset($_POST['username']) ? trim($_POST['username']) : '';
-$password = isset($_POST['password']) ? $_POST['password'] : '';
-$confirm_password = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
-$fname = isset($_POST['fname']) ? trim($_POST['fname']) : '';
-$lname = isset($_POST['lname']) ? trim($_POST['lname']) : '';
+    $username = isset($_POST['username']) ? trim($_POST['username']) : '';
+    $password = isset($_POST['password']) ? $_POST['password'] : '';
+    $confirm_password = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
+    $fname = isset($_POST['fname']) ? trim($_POST['fname']) : '';
+    $lname = isset($_POST['lname']) ? trim($_POST['lname']) : '';
 
 
 
     // Perform field validation
-    if ($username === "" || !isset($username)) {
+    if (!isset($username) || $username === "") {
     $error_messages['username'] = "Username is required";
     } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
     $error_messages['username'] = "Username can only contain letters, numbers, and underscores";
@@ -26,25 +26,25 @@ $lname = isset($_POST['lname']) ? trim($_POST['lname']) : '';
     $error_messages['username'] = "Username must be at least 8 characters long";
     }
 
-    if (empty($password)) {
+    if (!isset($password) || $username ==="") {
     $error_messages['password'] = "Password is required";
     } elseif (strlen($password) < 8) {
     $error_messages['password'] = "Password must be at least 8 characters long";
     }
 
-    if (empty($confirm_password)) {
+    if (!isset($confirm_password) || $confirm_password === "") {
     $error_messages['confirm_password'] = "Confirm Password is required";
     } elseif ($password !== $confirm_password) {
     $error_messages['confirm_password'] = "Passwords do not match";
     }
 
-    if (empty($fname)) {
+    if (!isset($fname) || $fname==="") {
     $error_messages['fname'] = "First name is required";
     } elseif (!ctype_alpha(str_replace(' ', '', $fname))) {
     $error_messages['fname'] = "First name can only contain letters";
     }
 
-    if (empty($lname)) {
+    if (!isset($lname) || $lname === "") {
     $error_messages['lname'] = "Last name is required";
     } elseif (!ctype_alpha(str_replace(' ', '', $lname))) {
     $error_messages['lname'] = "Last name can only contain letters";
