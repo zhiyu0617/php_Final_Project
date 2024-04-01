@@ -120,7 +120,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="password" id="password" name="password" required>
             <br>
             <input type="submit" name="login" value="Login">
-            <input type="submit" name="register" value="Register" formaction="register.php">
+            <input type="submit" name="register" value="Register" formaction="signup-form.php">
         </form>
     </div>
 </body>
