@@ -89,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action'])) {
         ?>
         
         <!--Form-->
-        <form id="form1" method="post" action="signup-form.php">
+        <form id="form1" method="post" action="signup.php">
             <table>
                 <tr>
                     <th><label for="input1">Username</label></th>
