@@ -1,11 +1,11 @@
 <?php
 session_start();
 
-$isLoggedIn = isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn'] === true;
+$isSignnedIn = isset($_SESSION['isSignnedIn']) && $_SESSION['isSignnedIn'] === true;
 ?>
 <nav>
     <ul>
-        <?php if ($isLoggedIn): ?>
+        <?php if ($isSignnedIn): ?>
             <li><a href="src/features/history.php">History</a></li>
             <li><a href="src/features/cancel.php">Cancel Game</a></li>
             <li><a href="src/features/signout.php">Sign Out</a></li>
@@ -19,7 +19,7 @@ $isLoggedIn = isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn'] === true
 <style>
     nav ul {
     list-style-type: none;
-    padding: 15cap;
+    padding: 2cap;
     text-align: center;
     background-color: plum; 
 }
