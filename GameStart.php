@@ -2,15 +2,14 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: index.php');
+    header('Location: login.php');
     exit;
 }
 
-$_SESSION['current_level'] = 1;
-$_SESSION['score'] = 0;
+$_SESSION['current_question'] = 0; 
+$_SESSION['score'] = 0;            
+$_SESSION['livesUsed'] = 0;        
 
-
-$question_page = "Question.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,9 +19,12 @@ $question_page = "Question.php";
 </head>
 <body>
     <h1>Welcome to the Game!</h1>
-    <p>Test your knowledge and have fun!</p>
-    <form action="<?php echo $question_page; ?>" method="post">
+    <p>Get ready to test your knowledge!</p>
+
+    <form action="Question.php" method="post">
         <button type="submit" name="start_game">Start Game</button>
     </form>
+    
+    <a href="logout.php">Logout</a>
 </body>
 </html>

@@ -8,45 +8,30 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$questions = [
-    ["correct" => "C"],
-    ["correct" => "D"],
-    ["correct" => "C"],
-    ["correct" => "B"],
-    ["correct" => "D"],
-    ["correct" => "C"],
-    ["correct" => "C"],
-    ["correct" => "C"],
-    ["correct" => "B"],
-    ["correct" => "B"]
+$correct_answers = [
+    "C", "C", "C", "A", "C", "C", "D", "D", "A", "A"
 ];
 
 
-if (!isset($_SESSION['current_question'])) {
-    $_SESSION['feedback'] = "No current question set.";
+$current_index = $_SESSION['current_question'];
+$user_answer = $_POST['answer'] ?? '';
+
+if (isset($user_answer)) {
+    if ($user_answer === $correct_answers[$current_index]) {
+        $_SESSION['score']++;
+    } else {
+        $_SESSION['livesUsed']++; 
+    }
+
+    $_SESSION['current_question']++;
+    if ($_SESSION['current_question'] < count($correct_answers)) {
+        header('Location: Question.php');
+    } else {
+
+        header('Location: GameSummary.php');
+    }
+} else {
+    $_SESSION['feedback'] = "Please select an answer.";
     header('Location: Question.php');
-    exit;
-}
-
-$userAnswer = $_POST['answer'] ?? '';
-$correctAnswer = $questions[$_SESSION['current_question']]['correct'];
-
-
-if ($userAnswer === $correctAnswer) {
-    $_SESSION['score'] += 1;
-    $feedback = "Correct! Well done.";
-} else {
-    $feedback = "Incorrect. The correct answer was: {$correctAnswer}.";
-}
-
-
-$_SESSION['feedback'] = $feedback;
-
-
-$_SESSION['current_question']++;
-if ($_SESSION['current_question'] < count($questions)) {
-    header('Location: Question.php'); 
-} else {
-    header('Location: GameSummary.php'); 
 }
 exit;
