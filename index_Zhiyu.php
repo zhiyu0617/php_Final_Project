@@ -39,10 +39,19 @@
             case "signUp":
                 require 'src/features/signup.php';
                 break;
-        }
+        }     
         echo '<p>Welcome to our game! Please sign in to play.</p>';
     }
+
+    if ($isSignedIn){
+        require 'C:\wamp64\www\dw3\Final_Project\src\features\game.php';
+    }
+
+    $image_url='public/assets/media/Header_Gif.gif';
     ?>
+    <div style="text-align: center;">
+        <img src="<?php echo $image_url; ?>">
+    </div>
 </main>
 <footer>
     <?php require 'public/template/footer.php'; ?>
