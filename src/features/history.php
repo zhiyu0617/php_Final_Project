@@ -1,27 +1,21 @@
-<?php
-require_once 'config.php'; 
-
-$query = "SELECT scoreTime, id, fName, lName, result, livesUsed FROM history"; 
-$result = $connection->query($query);
-
-if ($result->num_rows > 0) {
-    echo "<table>";
-    echo "<tr><th>Date</th><th>Player ID</th><th>First Name</th><th>Last Name</th><th>Result</th><th>Lives Used</th></tr>";
-    while($row = $result->fetch_assoc()) {
-        echo "<tr>
-                <td>" . htmlspecialchars($row['scoreTime']) . "</td>
-                <td>" . htmlspecialchars($row['id']) . "</td>
-                <td>" . htmlspecialchars($row['fName']) . "</td>
-                <td>" . htmlspecialchars($row['lName']) . "</td>
-                <td>" . htmlspecialchars($row['result']) . "</td>
-                <td>" . htmlspecialchars($row['livesUsed']) . "</td>
-              </tr>";
-    }
-    echo "</table>";
-} else {
-    echo "<p>No history available.</p>";
-}
-
-$result->close();
-$connection->close(); 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game History</title>
+    <link rel="stylesheet" href="C:\wamp64\www\dw3\Final_Project\public\assets\css\style.css"> 
+</head>
+<body>
+    <header>
+        <h1>Game History</h1>
+    </header>
+    <main>
+        <section>
+            <p>Here's a look at your past game achievements. Keep up the great work!</p>
+            <?php require 'C:\wamp64\www\dw3\Final_Project\public\message\history-table.php'; ?>
+        </section>
+    </main>
+</body>
+</html>
 
