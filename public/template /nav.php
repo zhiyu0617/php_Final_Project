@@ -1,24 +1,16 @@
 <?php
-session_start();
-
-$isSignedIn = isset($_SESSION['isSignedIn']) && $_SESSION['isSignedIn'] === true;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['history'])) {
-        header('Location: src/features/history.php');
-        exit();
+        $pageToInclude = "history";
     } elseif (isset($_POST['cancelGame'])) {
-        header('Location: src/features/cancel.php');
-        exit();
+        $pageToInclude = "cancelGame";
     } elseif (isset($_POST['signOut'])) {
-        header('Location: src/features/signout.php');
-        exit();
-    } elseif (isset($_POST['signIn'])) {
-        header('Location: public/form/signin-form.php');
-        exit();
-    } elseif (isset($_POST['signUp'])) {
-        header('Location: public/form/signup-form.php');
-        exit();
+        $pageToInclude = "signOut";
+    }elseif (isset($_POST['signIn'])) {
+        $pageToInclude = "signIn";
+    }elseif (isset($_POST['signUp'])) {
+        $pageToInclude = "signUp";
     }
 }
 ?>
@@ -28,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Navigation Example</title>
-    <link rel="stylesheet" href="path/to/your/style.css"> <!-- Update this path -->
+    <link rel="stylesheet" href="public/assets/css/style.css">
 </head>
 <body>
 <nav>
@@ -70,3 +62,4 @@ nav ul li {
 }
 
 </style>
+
