@@ -1,19 +1,8 @@
 <?php
+require_once 'config.php'; 
 
-define('HOSTNAME', 'localhost');
-define('USERNAME', 'root');
-define('PASSWORD', '');
-define('DB_NAME', 'kidsGames');
-
-$connection = new mysqli(HOSTNAME, USERNAME, PASSWORD, DB_NAME);
-
-if ($connection->connect_error) 
-{
-    die("Connection failed: " . $connection->connect_error);
-}
-
-    $query = "SELECT scoreTime, id, fName, lName, result, livesUsed FROM history"; 
-    $result = $connection->query($query);
+$query = "SELECT scoreTime, id, fName, lName, result, livesUsed FROM history"; 
+$result = $connection->query($query);
 
 if ($result->num_rows > 0) {
     echo "<table>";
@@ -34,4 +23,4 @@ if ($result->num_rows > 0) {
 }
 
 $result->close();
-
+$connection->close(); 
