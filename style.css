@@ -1,20 +1,22 @@
 /* Overall body styling */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  margin: 0;
-  padding: 20px;
-  color: #333;
+  background-color: #f2f2f2;
+}
+
+.signin_body{
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
 }
 
 /* Container for the form, to align and style it */
 .container {
-  background-color: #ffffff;
+  width: 300px;
+  margin: 100px auto;
+  background-color: #fff;
   padding: 20px;
   border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  max-width: 500px;
-  margin: 20px auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 /* Styling the form itself */

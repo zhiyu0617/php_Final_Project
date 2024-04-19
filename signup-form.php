@@ -1,117 +1,90 @@
 <?php
-session_start(); // Start session to access session variables and store error messages
+session_start();
 
-// Define variables to store input field values and error messages
-$username = $password = $confirm_password = $fname = $lname = "";
-$error_messages = [];
-
-// If form is submitted, perform field validation
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action'])) {
-    
-    // Get form data
-    $username = isset($_POST['username']) ? trim($_POST['username']) : '';
-    $password = isset($_POST['password']) ? $_POST['password'] : '';
-    $confirm_password = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
-    $fname = isset($_POST['fname']) ? trim($_POST['fname']) : '';
-    $lname = isset($_POST['lname']) ? trim($_POST['lname']) : '';
-
-
-
-    // Perform field validation
-    if (!isset($username) || $username === "") {
-    $error_messages['username'] = "Username is required";
-    } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
-    $error_messages['username'] = "Username can only contain letters, numbers, and underscores";
-    } elseif (strlen($username) < 8) {
-    $error_messages['username'] = "Username must be at least 8 characters long";
+// Check for error messages
+if (isset($_SESSION['error_messages'])) {
+    foreach ($_SESSION['error_messages'] as $message) {
+        echo '<p class="error">' . htmlspecialchars($message) . '</p>';
     }
-
-    if (!isset($password) || $username ==="") {
-    $error_messages['password'] = "Password is required";
-    } elseif (strlen($password) < 8) {
-    $error_messages['password'] = "Password must be at least 8 characters long";
-    }
-
-    if (!isset($confirm_password) || $confirm_password === "") {
-    $error_messages['confirm_password'] = "Confirm Password is required";
-    } elseif ($password !== $confirm_password) {
-    $error_messages['confirm_password'] = "Passwords do not match";
-    }
-
-    if (!isset($fname) || $fname==="") {
-    $error_messages['fname'] = "First name is required";
-    } elseif (!ctype_alpha(str_replace(' ', '', $fname))) {
-    $error_messages['fname'] = "First name can only contain letters";
-    }
-
-    if (!isset($lname) || $lname === "") {
-    $error_messages['lname'] = "Last name is required";
-    } elseif (!ctype_alpha(str_replace(' ', '', $lname))) {
-    $error_messages['lname'] = "Last name can only contain letters";
-    }
-
-
-
-
-    // If there are errors, store error messages in session
-    if (!empty($error_messages)) {
-        $_SESSION['error_messages'] = $error_messages;
-        $_SESSION['form_data'] = ['username' => $username, 'fname' => $fname, 'lname' => $lname];
-        header("Location: signup-form.php");
-        exit;
-    }
+    // Clear error messages from session to avoid re-display on reload
+    unset($_SESSION['error_messages']);
 }
 
+// Check for previously submitted data
+$submitted_data = isset($_SESSION['submitted_data']) ? $_SESSION['submitted_data'] : [];
+
+// Pre-populate form fields with previously submitted data if available
+$username = isset($submitted_data['username']) ? $submitted_data['username'] : '';
+$fname = isset($submitted_data['fname']) ? $submitted_data['fname'] : '';
+$lname = isset($submitted_data['lname']) ? $submitted_data['lname'] : '';
+
+// For security reasons, do not pre-populate password and confirm password fields
+$password = '';
+$confirm_password = '';
 ?>
+
+
+
 <!DOCTYPE html>
 <html>
 
 <head>
     <title>Registration Form</title>
     <link rel="stylesheet" href="style.css">
-</head>
+    <script type="text/javascript" src=".\public\assets\js\fname-ajax.js"></script>
+    <script type="text/javascript" src=".\public\assets\js\lname-ajax.js"></script>
+    <script type="text/javascript" src=".\public\assets\js\pcode1-ajax.js"></script>
+    <script type="text/javascript" src=".\public\assets\js\pcode2-ajax.js"></script>
+    <script type="text/javascript" src=".\public\assets\js\uname-ajax.js"></script>
 
+</head>
+<header>
+    <?php
+     require "header.php";
+    ?>
+</header>
 <body>
-    <div class="container">
-        <h1 class="blueText">Registration Form</h1>
-        <hr>
-        <!-- Display error messages if any -->
-        <?php if (!empty($_SESSION['error_messages'])): ?>
-            <div class="errors">
-                <?php foreach ($_SESSION['error_messages'] as $message): ?>
-                    <p><?php echo htmlspecialchars($message); ?></p>
-                <?php endforeach; ?>
-            </div>
-        <?php 
-            // Clear error messages after displaying
-            unset($_SESSION['error_messages']);
-            endif; 
-        ?>
-        
-        <!--Form-->
+    <div>
         <form id="form1" method="post" action="signup.php">
             <table>
+            <tr>
+                 <th><label for="input1">Username</label></th>
+                    <td>
+                        <input id="input1" type="text" name="username" value="<?php echo htmlspecialchars($username); ?>" onkeyup="validateUsername()" required>
+                    <div id="username-error"></div>
+                    </td>
+                    </tr>
                 <tr>
-                    <th><label for="input1">Username</label></th>
-                    <td><input id="input1" type="text" name="username" value="<?php echo isset($_SESSION['form_data']['username']) ? htmlspecialchars($_SESSION['form_data']['username']) : ''; ?>" required></td>
-                </tr>
-                <tr>
-                    <th><label for="input2">Password</label></th>
-                    <td><input id="input2" type="password" name="password" required></td>
+                    <th><label for="password">Password</label></th>
+                    <td>
+                    <input id="password" type="password" name="password" oninput="check()" onkeyup="validatePass()" required>
+                    <span id="password-error"></span>
+
+                    </td>
                 </tr>
                 <tr>
                     <th><label for="input3">Confirm Password</label></th>
-                    <td><input id="input3" type="password" name="confirm_password" required></td>
+                    <td>
+                        <input id="input3" type="password" name="confirm_password" oninput="check()" onkeyup="validatePass2()" required>
+                        <span id="confirmpassword-error"></span>
+                    </td>
                 </tr>
                 <tr>
                     <th><label for="input4">First Name</label></th>
-                    <td><input id="input4" type="text" name="fname" value="<?php echo isset($_SESSION['form_data']['fname']) ? htmlspecialchars($_SESSION['form_data']['fname']) : ''; ?>" required></td>
+                    <td>
+                    <input id="input4" type="text" name="firstName" value="<?php echo htmlspecialchars($fname); ?>" onkeyup="validateFirstName()" required>
+                    <div id="firstNameMessage"></div>
+
+                    </td>
                 </tr>
                 <tr>
                     <th><label for="input5">Last Name</label></th>
-                    <td><input id="input5" type="text" name="lname" value="<?php echo isset($_SESSION['form_data']['lname']) ? htmlspecialchars($_SESSION['form_data']['lname']) : ''; ?>" required></td>
-                </tr>
+                    <td>
+                    <input id="input5" type="text" name="lastName" value="<?php echo htmlspecialchars($lname); ?>" onkeyup="validateLName()" required>
+                    <div id="lastname-error"></div>
 
+                    </td>
+                </tr>
                 <tr>
                     <td></td>
                     <td><input id="submit1" type="submit" name="action" value="Register" /></td>
@@ -124,5 +97,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action'])) {
         </form>
     </div>
 </body>
+<footer>
+    <?php require 'footer.php'; ?>
+</footer>
 
 </html>

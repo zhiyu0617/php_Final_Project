@@ -1,0 +1,24 @@
+.game-footer {
+    background-color: #C3B1E1; 
+    color: #023047; 
+    padding: 20px;
+    text-align: center;
+    border-top: 5px dashed #ffb703; 
+    font-family: 'Fredoka One', cursive; 
+    border-radius: 10px;
+}
+
+.game-footer a {
+    color: #023047;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.game-footer .fun-fact {
+    margin-top: 20px;
+    font-size: 18px;
+    background-color: #fff3b0;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
